@@ -1,0 +1,116 @@
+/* Violation highlights */
+.cr-violation {
+  position: relative;
+  padding: 2px 0;
+  cursor: help;
+  transition: background-color 0.2s;
+  border-radius: 2px;
+}
+
+/* Forbidden - Red */
+.cr-violation.cr-forbidden {
+  background-color: rgba(244, 67, 54, 0.2);
+  border-bottom: 2px solid #f44336;
+}
+
+.cr-violation.cr-forbidden:hover {
+  background-color: rgba(244, 67, 54, 0.35);
+}
+
+/* Pronoun - Orange */
+.cr-violation.cr-pronoun {
+  background-color: rgba(255, 152, 0, 0.2);
+  border-bottom: 2px solid #ff9800;
+}
+
+.cr-violation.cr-pronoun:hover {
+  background-color: rgba(255, 152, 0, 0.35);
+}
+
+/* First person - Yellow */
+.cr-violation.cr-first {
+  background-color: rgba(255, 235, 59, 0.3);
+  border-bottom: 2px solid #ffc107;
+}
+
+.cr-violation.cr-first:hover {
+  background-color: rgba(255, 235, 59, 0.45);
+}
+
+/* Filler - Blue */
+.cr-violation.cr-filler {
+  background-color: rgba(33, 150, 243, 0.2);
+  border-bottom: 2px solid #2196f3;
+}
+
+.cr-violation.cr-filler:hover {
+  background-color: rgba(33, 150, 243, 0.35);
+}
+
+/* Passive - Purple */
+.cr-violation.cr-passive {
+  background-color: rgba(156, 39, 176, 0.2);
+  border-bottom: 2px solid #9c27b0;
+}
+
+.cr-violation.cr-passive:hover {
+  background-color: rgba(156, 39, 176, 0.35);
+}
+
+/* Other - Gray */
+.cr-violation.cr-other {
+  background-color: rgba(158, 158, 158, 0.2);
+  border-bottom: 2px solid #9e9e9e;
+}
+
+.cr-violation.cr-other:hover {
+  background-color: rgba(158, 158, 158, 0.35);
+}
+
+/* Tooltip */
+.cr-violation::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: normal;
+  max-width: 300px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  margin-bottom: 5px;
+  z-index: 999999;
+  font-family: 'Alliance No. 2', Helvetica, sans-serif;
+  line-height: 1.4;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cr-violation:hover::after {
+  opacity: 1;
+}
+
+.cr-violation::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #333;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  margin-bottom: -5px;
+  z-index: 999999;
+}
+
+.cr-violation:hover::before {
+  opacity: 1;
+}
+
