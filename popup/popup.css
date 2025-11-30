@@ -1,20 +1,20 @@
 @font-face {
   font-family: 'Alliance No. 2';
-  src: url('fonts/Alliance No.2 Regular.otf') format('opentype');
+  src: url('../fonts/Alliance No.2 Regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Alliance No. 2';
-  src: url('fonts/Alliance No.2 Bold.otf') format('opentype');
+  src: url('../fonts/Alliance No.2 Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Alliance No. 2';
-  src: url('fonts/Degarism Studio - Alliance No.2 Light.otf') format('opentype');
+  src: url('../fonts/Degarism Studio - Alliance No.2 Light.otf') format('opentype');
   font-weight: 300;
   font-style: normal;
 }

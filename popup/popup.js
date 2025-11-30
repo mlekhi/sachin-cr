@@ -43,11 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStatus('Loading extension...', 'info');
         await chrome.scripting.executeScript({
           target: { tabId: tab.id },
-          files: ['content.js']
+          files: [
+            'scripts/text-finder.js',
+            'scripts/violations.js',
+            'scripts/highlighter.js',
+            'scripts/content.js'
+          ]
         });
         await chrome.scripting.insertCSS({
           target: { tabId: tab.id },
-          files: ['content.css']
+          files: ['scripts/content.css']
         });
         // Wait a bit for script to initialize
         await new Promise(resolve => setTimeout(resolve, 100));
