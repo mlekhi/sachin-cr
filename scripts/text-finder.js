@@ -1,39 +1,7 @@
-// Text detection system for Sachin CR
-class SachinCR {
-  constructor() {
-    this.init();
-  }
-
-  init() {
-    // Listen for messages from popup
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      try {
-        if (request.action === 'ping') {
-          sendResponse({ success: true, loaded: true });
-        } else if (request.action === 'analyze') {
-          const result = this.findTextElements();
-          sendResponse({ 
-            success: true, 
-            textCount: result.length,
-            texts: result.map(t => ({
-              type: t.type,
-              textLength: t.text.length,
-              preview: t.text.substring(0, 100) + (t.text.length > 100 ? '...' : '')
-            }))
-          });
-        } else {
-          sendResponse({ success: false, error: 'Unknown action' });
-        }
-      } catch (error) {
-        console.error('Sachin CR Error:', error);
-        sendResponse({ success: false, error: error.message });
-      }
-      return true;
-    });
-  }
-
+// Text element finding utilities
+class TextFinder {
   // Find all editable text elements (optimized for Notion)
-  findTextElements() {
+  static findTextElements() {
     const textElements = [];
     
     console.log('Sachin CR: Starting text detection...');
@@ -162,21 +130,7 @@ class SachinCR {
     });
 
     console.log(`Sachin CR: Found ${uniqueElements.length} unique text elements`);
-    uniqueElements.forEach((te, idx) => {
-      console.log(`  [${idx + 1}] ${te.type}: ${te.text.length} chars - "${te.text.substring(0, 50)}${te.text.length > 50 ? '...' : ''}"`);
-    });
-
     return uniqueElements;
   }
 }
 
-// Initialize when page loads
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    window.sachinCR = new SachinCR();
-    console.log('Sachin CR: Initialized (DOMContentLoaded)');
-  });
-} else {
-  window.sachinCR = new SachinCR();
-  console.log('Sachin CR: Initialized (immediate)');
-}
