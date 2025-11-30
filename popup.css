@@ -1,3 +1,24 @@
+@font-face {
+  font-family: 'Alliance No. 2';
+  src: url('fonts/Alliance No.2 Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Alliance No. 2';
+  src: url('fonts/Alliance No.2 Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Alliance No. 2';
+  src: url('fonts/Degarism Studio - Alliance No.2 Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +27,7 @@
 
 body {
   width: 280px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Alliance No. 2', Helvetica, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: #fff;
   color: #333;
 }
