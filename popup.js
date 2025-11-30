@@ -45,6 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
           target: { tabId: tab.id },
           files: ['content.js']
         });
+        await chrome.scripting.insertCSS({
+          target: { tabId: tab.id },
+          files: ['content.css']
+        });
         // Wait a bit for script to initialize
         await new Promise(resolve => setTimeout(resolve, 100));
       }
@@ -62,21 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (results && results.success) {
-        const count = results.textCount || 0;
+        const count = results.violationCount || 0;
         updateIssueCount(count);
         
-        if (count > 0 && results.texts) {
-          const textInfo = results.texts.map((t, i) => 
-            `${i + 1}. ${t.type} (${t.textLength} chars): ${t.preview}`
-          ).join('\n');
-          
-          updateStatus(`Found ${count} text element${count === 1 ? '' : 's'}!`, 'success');
-          console.log('Found texts:', results.texts);
-          
-          // Show details in console and alert for debugging
-          alert(`Found ${count} text elements:\n\n${textInfo}`);
+        if (count > 0) {
+          updateStatus(`Found ${count} violation${count === 1 ? '' : 's'}!`, 'success');
+          console.log('Found violations:', results.violations);
         } else {
-          updateStatus('No editable text found on this page.', 'info');
+          updateStatus('No violations found. Text looks good!', 'success');
         }
       } else {
         const errorMsg = results?.error || 'No editable text found on this page.';
@@ -97,11 +94,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Clear button click handler
   clearButton.addEventListener('click', async () => {
-    updateStatus('Reset complete.', 'info');
-    updateIssueCount(0);
+    try {
+      const tab = await getCurrentTab();
+      await chrome.tabs.sendMessage(tab.id, {
+        action: 'clear'
+      });
+      updateStatus('Highlights cleared.', 'info');
+      updateIssueCount(0);
+    } catch (error) {
+      console.error('Error:', error);
+      updateStatus('Error clearing highlights.', 'error');
+    }
   });
 
   // Check initial state
   updateIssueCount(0);
 });
-
