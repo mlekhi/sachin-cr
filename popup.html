@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sachin CR</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Sachin CR</h1>
+      <p class="subtitle">Automated text editing & suggestions</p>
+    </div>
+    
+    <div class="controls">
+      <button id="goButton" class="go-button">
+        <span class="button-text">Go</span>
+        <span class="button-icon">▶</span>
+      </button>
+      <button id="clearButton" class="clear-button">
+        Clear
+      </button>
+    </div>
+    
+    <div class="stats" id="stats">
+      <div class="stat-item">
+        <span class="stat-label">Text elements found:</span>
+        <span class="stat-value" id="issueCount">0</span>
+      </div>
+    </div>
+    
+    <div class="status" id="status"></div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
+
