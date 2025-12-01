@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Sachin CR",
   "version": "1.0.0",
-  "description": "Automating text editing with grammar and style suggestions specific to Contrary Research",
+  "description": "Get Sachin's review on Notion pages",
   "permissions": [
     "activeTab",
     "scripting"
@@ -22,9 +22,6 @@
     {
       "matches": ["<all_urls>"],
       "js": [
-        "scripts/text-finder.js",
-        "scripts/violations.js",
-        "scripts/highlighter.js",
         "scripts/content.js"
       ],
       "css": ["scripts/content.css"],
