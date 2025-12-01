@@ -3,7 +3,6 @@ class SachinReview {
   constructor() {
     this.button = null;
     this.modal = null;
-    this.apiBase = 'https://contrary-editing-demo-production.up.railway.app';
     this.isNotionPage = this.checkIfNotionPage();
     if (this.isNotionPage) {
       this.init();
@@ -54,15 +53,19 @@ class SachinReview {
       this.button.textContent = 'Loading pages...';
       this.button.classList.add('loading');
 
-      // Fetch pages from API
-      const response = await fetch(`${this.apiBase}/pages`);
+      // Send message to background script to fetch pages
+      const response = await chrome.runtime.sendMessage({ action: 'fetchPages' });
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response || !response.success) {
+        throw new Error(response?.error || 'Failed to fetch pages');
       }
 
-      const data = await response.json();
-      const pages = data.pages || [];
+      const pages = response.data?.pages || [];
+
+      if (!Array.isArray(pages)) {
+        console.error('Pages is not an array:', pages);
+        throw new Error('Invalid response format: pages should be an array');
+      }
 
       if (pages.length === 0) {
         throw new Error('No pages found');
@@ -77,6 +80,11 @@ class SachinReview {
       this.button.disabled = false;
     } catch (error) {
       console.error('Error fetching pages:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
       
       // Show error state
       this.button.textContent = 'Error - Try again';
@@ -166,25 +174,21 @@ class SachinReview {
         </div>
       `;
 
-      // Call process endpoint
-      const response = await fetch(`${this.apiBase}/process`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          page_id: pageId,
+      // Send message to background script to process page
+      const response = await chrome.runtime.sendMessage({
+        action: 'processPage',
+        pageId: pageId,
+        options: {
           model: 'openai',
           auto_select_child: true
-        })
+        }
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+      if (!response || !response.success) {
+        throw new Error(response?.error || 'Failed to process page');
       }
 
-      const result = await response.json();
+      const result = response.data;
 
       // Show success state
       modalBody.innerHTML = `
