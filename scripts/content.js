@@ -3,6 +3,7 @@ class SachinReview {
   constructor() {
     this.button = null;
     this.modal = null;
+    this.isProcessing = false;
     this.isNotionPage = this.checkIfNotionPage();
     if (this.isNotionPage) {
       this.init();
@@ -141,10 +142,18 @@ class SachinReview {
     const cancelBtn = this.modal.querySelector('.sachin-review-modal-cancel');
     const pageItems = this.modal.querySelectorAll('.sachin-review-page-item');
 
-    closeBtn.addEventListener('click', () => this.closeModal());
-    cancelBtn.addEventListener('click', () => this.closeModal());
+    closeBtn.addEventListener('click', () => {
+      if (!this.isProcessing) {
+        this.closeModal();
+      }
+    });
+    cancelBtn.addEventListener('click', () => {
+      if (!this.isProcessing) {
+        this.closeModal();
+      }
+    });
     this.modal.addEventListener('click', (e) => {
-      if (e.target === this.modal) {
+      if (e.target === this.modal && !this.isProcessing) {
         this.closeModal();
       }
     });
@@ -165,12 +174,24 @@ class SachinReview {
     if (!this.modal) return;
 
     try {
+      // Set processing flag and disable modal closing
+      this.isProcessing = true;
+      const closeBtn = this.modal.querySelector('.sachin-review-modal-close');
+      if (closeBtn) {
+        closeBtn.style.opacity = '0.5';
+        closeBtn.style.cursor = 'not-allowed';
+      }
+
       // Show processing state
       const modalBody = this.modal.querySelector('.sachin-review-modal-body');
       modalBody.innerHTML = `
         <div class="sachin-review-processing">
           <div class="sachin-review-spinner"></div>
           <p>Processing page and adding comments...</p>
+          <div class="sachin-review-warning">
+            <span class="sachin-review-warning-icon">⚠️</span>
+            <p class="sachin-review-warning-text">Please do not close this page. It will stop the operation.</p>
+          </div>
         </div>
       `;
 
@@ -189,6 +210,14 @@ class SachinReview {
       }
 
       const result = response.data;
+
+      // Reset processing flag
+      this.isProcessing = false;
+      const modalCloseBtn = this.modal.querySelector('.sachin-review-modal-close');
+      if (modalCloseBtn) {
+        modalCloseBtn.style.opacity = '';
+        modalCloseBtn.style.cursor = '';
+      }
 
       // Show success state
       modalBody.innerHTML = `
@@ -218,11 +247,19 @@ class SachinReview {
         </div>
       `;
 
-      const closeBtn = modalBody.querySelector('.sachin-review-modal-close-btn');
-      closeBtn.addEventListener('click', () => this.closeModal());
+      const successCloseBtn = modalBody.querySelector('.sachin-review-modal-close-btn');
+      successCloseBtn.addEventListener('click', () => this.closeModal());
 
     } catch (error) {
       console.error('Error processing page:', error);
+      
+      // Reset processing flag
+      this.isProcessing = false;
+      const modalCloseBtn = this.modal.querySelector('.sachin-review-modal-close');
+      if (modalCloseBtn) {
+        modalCloseBtn.style.opacity = '';
+        modalCloseBtn.style.cursor = '';
+      }
       
       // Show error state
       const modalBody = this.modal.querySelector('.sachin-review-modal-body');
@@ -235,8 +272,8 @@ class SachinReview {
         </div>
       `;
 
-      const closeBtn = modalBody.querySelector('.sachin-review-modal-close-btn');
-      closeBtn.addEventListener('click', () => this.closeModal());
+      const errorCloseBtn = modalBody.querySelector('.sachin-review-modal-close-btn');
+      errorCloseBtn.addEventListener('click', () => this.closeModal());
     }
   }
 
