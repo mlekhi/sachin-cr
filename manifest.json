@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Sachin CR",
   "version": "1.0.0",
-  "description": "Get Sachin's review on Notion pages",
+  "description": "Get Sachin's review on a memo",
   "permissions": [
     "activeTab",
     "scripting"
