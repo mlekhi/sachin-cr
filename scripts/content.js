@@ -242,7 +242,7 @@ class SachinReview {
           <h3>Error Fetching Child Pages</h3>
           <p class="sachin-review-result-message error">${this.escapeHtml(error.message || 'An error occurred')}</p>
           <div class="sachin-review-modal-footer">
-            <button class="sachin-review-modal-use-parent" data-parent-id="${parentPageId}">Use parent page instead</button>
+            <button class="sachin-review-modal-use-parent" data-parent-id="${parentPageId}">Review this page</button>
             <button class="sachin-review-modal-close-btn">Cancel</button>
           </div>
         </div>
@@ -274,7 +274,7 @@ class SachinReview {
         <div class="sachin-review-result">
           <p class="sachin-review-result-message">No child pages found for this page.</p>
           <div class="sachin-review-modal-footer">
-            <button class="sachin-review-modal-use-parent" data-parent-id="${parentPageId}">Use parent page instead</button>
+            <button class="sachin-review-modal-use-parent" data-parent-id="${parentPageId}">Review this page</button>
             <button class="sachin-review-modal-cancel">Cancel</button>
           </div>
         </div>
@@ -309,7 +309,7 @@ class SachinReview {
         `).join('')}
       </div>
       <div class="sachin-review-modal-footer">
-        <button class="sachin-review-modal-use-parent" data-parent-id="${parentPageId}">Use parent page instead</button>
+        <button class="sachin-review-modal-use-parent" data-parent-id="${parentPageId}">Review this page</button>
         <button class="sachin-review-modal-cancel">Cancel</button>
       </div>
     `;

@@ -156,14 +156,31 @@
   border-top: 1px solid #e0e0e0 !important;
   display: flex !important;
   justify-content: flex-end !important;
+  gap: 12px !important;
+}
+
+.sachin-review-modal-use-parent {
+  padding: 10px 20px !important;
+  background: #000 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+}
+
+.sachin-review-modal-use-parent:hover {
+  background: #333 !important;
 }
 
 .sachin-review-modal-cancel,
 .sachin-review-modal-close-btn {
   padding: 10px 20px !important;
-  background: #f5f5f5 !important;
-  color: #000 !important;
-  border: 1px solid #e0e0e0 !important;
+  background: transparent !important;
+  color: #666 !important;
+  border: 1px solid #ddd !important;
   border-radius: 6px !important;
   font-size: 14px !important;
   font-weight: 500 !important;
@@ -173,7 +190,8 @@
 
 .sachin-review-modal-cancel:hover,
 .sachin-review-modal-close-btn:hover {
-  background: #e8e8e8 !important;
+  background: #f5f5f5 !important;
+  border-color: #ccc !important;
 }
 
 /* Processing state */
