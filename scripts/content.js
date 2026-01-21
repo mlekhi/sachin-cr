@@ -162,12 +162,180 @@ class SachinReview {
     pageItems.forEach(item => {
       item.addEventListener('click', () => {
         const pageId = item.dataset.pageId;
-        this.processPage(pageId);
+        this.fetchAndShowChildren(pageId);
       });
     });
 
     // Append to body
     document.body.appendChild(this.modal);
+  }
+
+  async fetchAndShowChildren(parentPageId) {
+    if (!this.modal) return;
+
+    try {
+      // Set processing flag
+      this.isProcessing = true;
+      const closeBtn = this.modal.querySelector('.sachin-review-modal-close');
+      if (closeBtn) {
+        closeBtn.style.opacity = '0.5';
+        closeBtn.style.cursor = 'not-allowed';
+      }
+
+      // Show loading state
+      const modalBody = this.modal.querySelector('.sachin-review-modal-body');
+      modalBody.innerHTML = `
+        <div class="sachin-review-processing">
+          <div class="sachin-review-spinner"></div>
+          <p>Loading child pages...</p>
+        </div>
+      `;
+
+      // Send message to background script to fetch children
+      const response = await chrome.runtime.sendMessage({
+        action: 'fetchChildren',
+        pageId: parentPageId
+      });
+
+      if (!response || !response.success) {
+        throw new Error(response?.error || 'Failed to fetch child pages');
+      }
+
+      const childPages = response.data?.pages || [];
+
+      if (!Array.isArray(childPages)) {
+        throw new Error('Invalid response format: child pages should be an array');
+      }
+
+      // If no child pages, skip directly to processing the parent page
+      if (childPages.length === 0) {
+        this.processPage(parentPageId);
+        return;
+      }
+
+      // Reset processing flag
+      this.isProcessing = false;
+      if (closeBtn) {
+        closeBtn.style.opacity = '';
+        closeBtn.style.cursor = '';
+      }
+
+      // Show child page selection modal
+      this.showChildPageSelectionModal(childPages, parentPageId);
+
+    } catch (error) {
+      console.error('Error fetching child pages:', error);
+
+      // Reset processing flag
+      this.isProcessing = false;
+      const modalCloseBtn = this.modal.querySelector('.sachin-review-modal-close');
+      if (modalCloseBtn) {
+        modalCloseBtn.style.opacity = '';
+        modalCloseBtn.style.cursor = '';
+      }
+
+      // Show error state with option to use parent page
+      const modalBody = this.modal.querySelector('.sachin-review-modal-body');
+      modalBody.innerHTML = `
+        <div class="sachin-review-result">
+          <div class="sachin-review-result-error">✗</div>
+          <h3>Error Fetching Child Pages</h3>
+          <p class="sachin-review-result-message error">${this.escapeHtml(error.message || 'An error occurred')}</p>
+          <div class="sachin-review-modal-footer">
+            <button class="sachin-review-modal-use-parent" data-parent-id="${parentPageId}">Use parent page instead</button>
+            <button class="sachin-review-modal-close-btn">Cancel</button>
+          </div>
+        </div>
+      `;
+
+      const useParentBtn = modalBody.querySelector('.sachin-review-modal-use-parent');
+      const errorCloseBtn = modalBody.querySelector('.sachin-review-modal-close-btn');
+
+      useParentBtn.addEventListener('click', () => {
+        this.processPage(parentPageId);
+      });
+
+      errorCloseBtn.addEventListener('click', () => this.closeModal());
+    }
+  }
+
+  showChildPageSelectionModal(childPages, parentPageId) {
+    // Update modal header
+    const modalHeader = this.modal.querySelector('.sachin-review-modal-header h2');
+    if (modalHeader) {
+      modalHeader.textContent = 'Select a child page to review';
+    }
+
+    const modalBody = this.modal.querySelector('.sachin-review-modal-body');
+
+    if (childPages.length === 0) {
+      // No child pages found, offer to use parent page
+      modalBody.innerHTML = `
+        <div class="sachin-review-result">
+          <p class="sachin-review-result-message">No child pages found for this page.</p>
+          <div class="sachin-review-modal-footer">
+            <button class="sachin-review-modal-use-parent" data-parent-id="${parentPageId}">Use parent page instead</button>
+            <button class="sachin-review-modal-cancel">Cancel</button>
+          </div>
+        </div>
+      `;
+
+      const useParentBtn = modalBody.querySelector('.sachin-review-modal-use-parent');
+      const cancelBtn = modalBody.querySelector('.sachin-review-modal-cancel');
+
+      useParentBtn.addEventListener('click', () => {
+        this.processPage(parentPageId);
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        if (!this.isProcessing) {
+          this.closeModal();
+        }
+      });
+      return;
+    }
+
+    // Show child pages list
+    modalBody.innerHTML = `
+      <div class="sachin-review-pages-list" id="sachin-pages-list">
+        ${childPages.map((page) => `
+          <div class="sachin-review-page-item" data-page-id="${page.id}">
+            <div class="sachin-review-page-title">${this.escapeHtml(page.title)}</div>
+            <div class="sachin-review-page-meta">
+              <span class="sachin-review-page-status">${this.escapeHtml(page.status)}</span>
+              <span class="sachin-review-page-date">${page.created}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="sachin-review-modal-footer">
+        <button class="sachin-review-modal-use-parent" data-parent-id="${parentPageId}">Use parent page instead</button>
+        <button class="sachin-review-modal-cancel">Cancel</button>
+      </div>
+    `;
+
+    // Add event listeners
+    const pageItems = modalBody.querySelectorAll('.sachin-review-page-item');
+    const useParentBtn = modalBody.querySelector('.sachin-review-modal-use-parent');
+    const cancelBtn = modalBody.querySelector('.sachin-review-modal-cancel');
+
+    pageItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const pageId = item.dataset.pageId;
+        // Now process the selected child page
+        this.processPage(pageId);
+      });
+    });
+
+    useParentBtn.addEventListener('click', () => {
+      this.processPage(parentPageId);
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      if (!this.isProcessing) {
+        this.closeModal();
+      }
+    });
   }
 
   async processPage(pageId) {
@@ -201,7 +369,7 @@ class SachinReview {
         pageId: pageId,
         options: {
           model: 'openai',
-          auto_select_child: true
+          auto_select_child: false
         }
       });
 
