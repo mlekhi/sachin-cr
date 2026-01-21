@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Sachin CR",
+  "name": "Sachin CR - Notion AI Review Tool",
   "version": "1.0.0",
-  "description": "Get Sachin's review on a memo",
+  "description": "AI-powered review tool that analyzes Notion documents and adds structured review comments.",
   "permissions": [
     "activeTab",
     "scripting"
   ],
   "host_permissions": [
-    "<all_urls>"
+    "https://www.notion.so/*",
+    "https://*.notion.site/*"
   ],
   "background": {
     "service_worker": "scripts/background.js"
@@ -23,13 +24,15 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": [
+        "https://www.notion.so/*",
+        "https://*.notion.site/*"
+      ],
       "js": [
         "scripts/content.js"
       ],
       "css": ["scripts/content.css"],
-      "run_at": "document_idle",
-      "all_frames": false
+      "run_at": "document_idle"
     }
   ],
   "icons": {
@@ -38,4 +41,3 @@
     "128": "icons/icon128.png"
   }
 }
-
