@@ -203,33 +203,13 @@
   margin: 0 0 24px 0 !important;
 }
 
-.sachin-review-warning {
-  margin-top: 24px !important;
-  padding: 16px !important;
-  background: #fff3cd !important;
-  border: 1px solid #ffc107 !important;
-  border-radius: 8px !important;
-  display: flex !important;
-  align-items: flex-start !important;
-  gap: 12px !important;
-  text-align: left !important;
-  max-width: 500px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-.sachin-review-warning-icon {
-  font-size: 20px !important;
-  flex-shrink: 0 !important;
-  line-height: 1.4 !important;
-}
-
 .sachin-review-warning-text {
-  color: #856404 !important;
+  color: #666 !important;
   font-size: 13px !important;
-  margin: 0 !important;
-  line-height: 1.5 !important;
-  font-weight: 500 !important;
+  margin: 24px 0 0 0 !important;
+  line-height: 1.4 !important;
+  font-weight: 400 !important;
+  opacity: 0.8 !important;
 }
 
 /* Result state */

@@ -356,10 +356,7 @@ class SachinReview {
         <div class="sachin-review-processing">
           <div class="sachin-review-spinner"></div>
           <p>Processing page and adding comments...</p>
-          <div class="sachin-review-warning">
-            <span class="sachin-review-warning-icon">⚠️</span>
-            <p class="sachin-review-warning-text">Please do not close this page. It will stop the operation.</p>
-          </div>
+          <p class="sachin-review-warning-text">⚠️ Please keep this page open</p>
         </div>
       `;
 
