@@ -36,7 +36,7 @@ class SachinReview {
     // Create button element
     this.button = document.createElement('button');
     this.button.id = 'sachin-review-button';
-    this.button.textContent = "Get Sachin's review on this page";
+    this.button.textContent = "Get Sachin's review on your memo";
     this.button.className = 'sachin-review-btn';
     
     // Add click handler
@@ -76,7 +76,7 @@ class SachinReview {
       this.showPageSelectionModal(pages);
       
       // Reset button
-      this.button.textContent = "Get Sachin's review on this page";
+      this.button.textContent = "Get Sachin's review on your memo";
       this.button.classList.remove('loading');
       this.button.disabled = false;
     } catch (error) {
@@ -94,7 +94,7 @@ class SachinReview {
       
       // Reset after 3 seconds
       setTimeout(() => {
-        this.button.textContent = "Get Sachin's review on this page";
+        this.button.textContent = "Get Sachin's review on your memo";
         this.button.classList.remove('error');
         this.button.disabled = false;
       }, 3000);
