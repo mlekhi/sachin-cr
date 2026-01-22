@@ -4,8 +4,7 @@
   "version": "1.0.0",
   "description": "AI-powered review tool that analyzes Notion documents and adds structured review comments.",
   "permissions": [
-    "activeTab",
-    "scripting"
+    "activeTab"
   ],
   "host_permissions": [
     "https://www.notion.so/*",
