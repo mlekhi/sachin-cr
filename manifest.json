@@ -3,12 +3,7 @@
   "name": "Sachin CR - Notion AI Review Tool",
   "version": "1.0.0",
   "description": "AI-powered review tool that analyzes Notion documents and adds structured review comments.",
-  "permissions": [
-    "activeTab"
-  ],
   "host_permissions": [
-    "https://www.notion.so/*",
-    "https://*.notion.site/*",
     "https://contrary-editing-demo-production.up.railway.app/*"
   ],
   "background": {
